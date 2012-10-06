@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project DefaultTargets="Distribute" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<!-- Based on script from http://autofac.org" -->
+	<Import Project="resources\msbuild\library\MSBuild.Community.Tasks.targets" />
+	<PropertyGroup>
+		<!--
+			 Primary configuration properties (override them via command line
+			 if needed
+		-->
+		<BuildPath Condition="$(BuildPath)==''">build</BuildPath>
+		<Configuration Condition="$(Configuration)==''">Release</Configuration>
+		<BuildFramework></BuildFramework>
+		<AllowPartiallyTrustedCallers Condition="$(AllowPartiallyTrustedCallers)==''">true</AllowPartiallyTrustedCallers>
+		<FxCopCmdPath Condition="$(FxCopCmdPath)==''">C:\Program Files (x86)\Microsoft FxCop 1.36\FxCopCmd.exe</FxCopCmdPath>
+		<SnCmdPath Condition="$(SnCmdPath)==''">C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\sn.exe</SnCmdPath>
+		<ILMergeCmdPath Condition="$(ILMergeCmdPath)==''">C:\Program Files (x86)\Microsoft\ILMerge\ILMerge.exe</ILMergeCmdPath>
+		<!--
+			Derived configuration properties
+		 -->
+		<ArchiveDirectory Condition="$(ArchiveDirectory)==''">$(BuildPath)</ArchiveDirectory>
+		<BinariesPath>$(BuildPath)\binaries</BinariesPath>
+		<LicensePath>$(BuildPath)\license</LicensePath>
+		<BinariesSource>bin\$(Configuration)</BinariesSource>
+		<ProjectName>$(MSBuildProjectName)</ProjectName>
+	</PropertyGroup>
+	<PropertyGroup>
+		<FxCop_CriticalErrors>0</FxCop_CriticalErrors>
+		<FxCop_Errors>0</FxCop_Errors>
+		<FxCop_CriticalWarnings>0</FxCop_CriticalWarnings>
+		<FxCop_Warnings>0</FxCop_Warnings>
+		<FxCop_TotalErrors>0</FxCop_TotalErrors>
+		<FxCopOutput>$(BuildPath)\artifacts\FxCop.xml</FxCopOutput>
+	</PropertyGroup>
+
+	<!-- 
+	 Solution redirects. Every VS project normally knows how to support these targets
+	-->
+	<Target Name="Build">
+		<MSBuild Projects="src\$(ProjectName).sln" Targets="Build" Properties="Configuration=$(Configuration)$(BuildFramework);BuildConstants=$(BuildConstants);MSBuildTargets=$(BuildTargets)"/>
+		<!--
+		<MSBuild Projects="src\$(ProjectName)-WP7.sln" Targets="Build" Properties="Configuration=$(Configuration)$(BuildFramework);BuildConstants=$(BuildConstants);MSBuildTargets=$(BuildTargets)"/>
+		<MSBuild Projects="src\$(ProjectName)-WP71.sln" Targets="Build" Properties="Configuration=$(Configuration)$(BuildFramework);BuildConstants=$(BuildConstants);MSBuildTargets=$(BuildTargets)"/>
+		-->
+	</Target>
+
+	<Target Name="Clean">
+		<MSBuild Projects="src\$(ProjectName).sln" Targets="Clean" Properties="Configuration=$(Configuration)$(BuildFramework);BuildConstants=$(BuildConstants);MSBuildTargets=$(BuildTargets)" />
+		<!--
+		<MSBuild Projects="src\$(ProjectName)-WP7.sln" Targets="Clean" Properties="Configuration=$(Configuration)$(BuildFramework);BuildConstants=$(BuildConstants);MSBuildTargets=$(BuildTargets)" />
+		<MSBuild Projects="src\$(ProjectName)-WP71.sln" Targets="Clean" Properties="Configuration=$(Configuration)$(BuildFramework);BuildConstants=$(BuildConstants);MSBuildTargets=$(BuildTargets)" />
+		-->
+
+		<CreateItem Include="**/Debug/**/*.*;**/Release/**/*.*">
+			<Output ItemName="_binaryFiles" TaskParameter="Include"/>
+		</CreateItem>
+		<Delete Files="@(_binaryFiles)" TreatErrorsAsWarnings="true"/>
+		<RemoveDir Directories="$(BuildPath)" />
+	</Target>
+
+	<Target Name="Rebuild" DependsOnTargets="UpdateVersion;Clean;Build;" />
+	
+	<Target Name="CreateVersionNumber" Condition="$(VersionNumber)==''">
+		<Version VersionFile=".\resources\msbuild\VersionNumber.txt" RevisionType="Increment">
+			<Output TaskParameter="Major" PropertyName="Major" />
+			<Output TaskParameter="Minor" PropertyName="Minor" />
+			<Output TaskParameter="Build" PropertyName="Build" />
+			<Output TaskParameter="Revision" PropertyName="Revision" />
+		</Version>
+		<CreateProperty Value="$(Major).$(Minor).$(Build).$(Revision)">
+			<Output TaskParameter="Value" PropertyName="VersionNumber" />
+		</CreateProperty>
+	</Target>
+	
+	<Target Name="UpdateVersion" DependsOnTargets="CreateVersionNumber">
+		<CreateItem Include="**\SharedAssemblyInfo.cs">
+			<Output ItemName="UpdateVersionPaths" TaskParameter="Include"/>
+		</CreateItem>
+		<CreateItem Include="@(UpdateVersionPaths->'%(SubFolder)%(RecursiveDir)VersionAssemblyInfo.cs')">
+			<Output ItemName="UpdateVersionFiles" TaskParameter="Include"/>
+		</CreateItem>
+		<Time Format="u">
+			<Output TaskParameter="FormattedTime" PropertyName="BuildTime" />
+		</Time>
+		
+		<AssemblyInfo OutputFile="%(UpdateVersionFiles.FullPath)" CodeLanguage="CS"
+			AssemblyVersion="$(VersionNumber)"
+			AssemblyFileVersion="$(VersionNumber)"
+			AssemblyConfiguration="$(Configuration) built on $(BuildTime)" 
+		/>
+	</Target>
+	
+	<Target Name="WipeResources">
+		<!--Wipe old version files-->
+		<CreateItem Include="**\VersionAssemblyInfo.cs">
+			<Output ItemName="UpdateVersionPaths" TaskParameter="Include"/>
+		</CreateItem>
+		<Delete Files="@(UpdateVersionPaths)" />
+	</Target>
+	
+	<!--
+	 Copies built items to the distrib directory
+	 -->
+	<Target Name="Sign" DependsOnTargets="Build">
+		<MakeDir Directories="$(BuildPath);"/>
+		<MakeDir Directories="$(BinariesPath)" />
+		
+		<!--Libraries-->
+		<CreateItem Include="$(BinariesSource)\**\*.*;">
+			<Output ItemName="binaryFiles" TaskParameter="Include"/>
+		</CreateItem>
+		
+		<!--Licenses-->
+		<CreateItem Include="*License.md">
+			<Output ItemName="licenseFiles" TaskParameter="Include"/>
+		</CreateItem>
+		
+		<Copy SourceFiles="@(licenseFiles)" DestinationFolder="$(LicensePath)" />
+		<Copy SourceFiles="@(binaryFiles)" DestinationFolder="$(BinariesPath)\%(RecursiveDir)" />
+		
+		<!--<Exec Command="&quot;$(SnCmdPath)&quot; -R &quot;$(BinariesPath)\IrcDotNet.dll&quot; &quot;src\IrcDotNet.snk&quot;" />-->
+		
+		<Copy SourceFiles="$(BinariesPath)\*.xml" DestinationFolder="$(BinariesPath)" />
+		
+		<CreateItem Include="$(BinariesPath)\**\*.pdb;">
+			<Output ItemName="pdbFiles" TaskParameter="Include" />
+		</CreateItem>
+		
+		<Delete Files="@(pdbFiles)" />
+	</Target>
+	
+	<Target Name="BuildDebug">
+		<MSBuild Projects="src\$(ProjectName).sln" Targets="Build" Properties="Configuration=Debug$(BuildFramework);BuildConstants=$(BuildConstants);MSBuildTargets=$(BuildTargets)"/>
+		<!--
+		<MSBuild Projects="src\$(ProjectName)-WP7.sln" Targets="Build" Properties="Configuration=Debug$(BuildFramework);BuildConstants=$(BuildConstants);MSBuildTargets=$(BuildTargets)"/>
+		<MSBuild Projects="src\$(ProjectName)-WP71.sln" Targets="Build" Properties="Configuration=Debug$(BuildFramework);BuildConstants=$(BuildConstants);MSBuildTargets=$(BuildTargets)"/>
+		-->
+	</Target>
+	
+	<Target Name="CodeAnalysis" DependsOnTargets="BuildDebug">
+		<MakeDir Directories="$(BuildPath)\artifacts" />
+		<Exec 
+			Command="&quot;$(FxCopCmdPath)&quot; /searchgac /file:bin\Debug\net40\$(ProjectName).dll /out:$(FxCopOutput)" 
+			ContinueOnError="True" />
+			
+		<XmlRead ContinueOnError="True"
+			XmlFileName="$(FxCopOutput)"
+			XPath="string(count(//Issue[@Level='CriticalError']))">
+			<Output TaskParameter="Value" PropertyName="FxCop_CriticalErrors" />
+		</XmlRead>
+		<XmlRead ContinueOnError="True"
+			XmlFileName="$(FxCopOutput)"
+			XPath="string(count(//Issue[@Level='Error']))">
+			<Output TaskParameter="Value" PropertyName="FxCop_Errors" />
+		</XmlRead>
+		<XmlRead ContinueOnError="True"
+			XmlFileName="$(FxCopOutput)"
+			XPath="string(count(//Issue[@Level='CriticalWarning']))">
+			<Output TaskParameter="Value" PropertyName="FxCop_CriticalWarnings" />
+		</XmlRead>
+		<XmlRead ContinueOnError="True"
+			XmlFileName="$(FxCopOutput)"
+			XPath="string(count(//Issue[@Level='Warning']))">
+			<Output TaskParameter="Value" PropertyName="FxCop_Warnings" />
+		</XmlRead>
+		<XmlRead ContinueOnError="True"
+			XmlFileName="$(FxCopOutput)"
+			XPath="string(count(//Issue))">
+			<Output TaskParameter="Value" PropertyName="FxCop_TotalErrors" />
+		</XmlRead>
+
+		<Warning Text="FxCop encountered $(FxCop_TotalErrors) rule violations"
+				Condition="$(FxCop_TotalErrors) &gt; 0" />
+
+		<Error Text="FxCop encountered $(FxCop_TotalErrors) rule violations"
+				Condition="$(FxCop_TotalErrors) &gt; 0" />
+	</Target>
+	
+	<Target Name="Distribute" DependsOnTargets="Clean;CodeAnalysis;ReBuild;Sign">
+		<MakeDir Directories="$(ArchiveDirectory)" />
+
+		<!-- Archive-->
+		<CreateItem Include="$(BinariesPath)\**\*.*;;$(LicensePath)\*.*">
+			<Output ItemName="archiveFiles" TaskParameter="Include" />
+		</CreateItem>
+		<Zip Files="@(archiveFiles)" ZipFileName="$(ArchiveDirectory)\$(ProjectName)-$(VersionNumber).zip" Flatten="false" WorkingDirectory="$(BuildPath)" />
+	</Target>
+</Project>
