@@ -295,9 +295,15 @@ namespace IrcDotNet
             sendEventArgs.Completed += SendCompleted;
 
             if (!this.socket.SendAsync(sendEventArgs))
-                ((EventHandler<SocketAsyncEventArgs>)SendCompleted).BeginInvoke(
-                    this.socket, sendEventArgs, null, null);
-        }
+            {
+                var handler = ((EventHandler<SocketAsyncEventArgs>)SendCompleted);
+#if WINDOWS_PHONE
+                handler.Invoke(this.socket, sendEventArgs);
+#else
+                handler.BeginInvoke(this.socket, sendEventArgs, null, null);
+#endif
+            }
+       }
 
         private void SendCompleted(object sender, SocketAsyncEventArgs e)
         {
@@ -343,8 +349,15 @@ namespace IrcDotNet
             receiveEventArgs.Completed += ReceiveCompleted;
 
             if (!this.socket.ReceiveAsync(receiveEventArgs))
-                ((EventHandler<SocketAsyncEventArgs>)ReceiveCompleted).BeginInvoke(
-                    this.socket, receiveEventArgs, null, null);
+            {
+                var handler = ((EventHandler<SocketAsyncEventArgs>)ReceiveCompleted);
+
+#if WINDOWS_PHONE
+                handler.Invoke(this.socket, receiveEventArgs);
+#else
+                handler.BeginInvoke(this.socket, receiveEventArgs, null, null);
+#endif
+            }
         }
 
         private void ReceiveCompleted(object sender, SocketAsyncEventArgs e)
@@ -413,8 +426,15 @@ namespace IrcDotNet
             connectEventArgs.Completed += ConnectCompleted;
 
             if (!this.socket.ConnectAsync(connectEventArgs))
-                ((EventHandler<SocketAsyncEventArgs>)ConnectCompleted).BeginInvoke(
-                    this.socket, connectEventArgs, null, null);
+            {
+                var handler = ((EventHandler<SocketAsyncEventArgs>)ConnectCompleted);
+
+#if WINDOWS_PHONE
+                handler.Invoke(this.socket, connectEventArgs);
+#else
+                handler.BeginInvoke(this.socket, connectEventArgs, null, null);
+#endif
+            }
         }
 
         private void ConnectCompleted(object sender, SocketAsyncEventArgs e)
@@ -472,16 +492,20 @@ namespace IrcDotNet
             var disconnectEventArgs = new SocketAsyncEventArgs();
             disconnectEventArgs.Completed += DisconnectCompleted;
 
-#if SILVERLIGHT
+            var handler = ((EventHandler<SocketAsyncEventArgs>)DisconnectCompleted);
+
+#if WINDOWS_PHONE
             this.socket.Shutdown(SocketShutdown.Both);
             disconnectEventArgs.SocketError = SocketError.Success;
-            ((EventHandler<SocketAsyncEventArgs>)DisconnectCompleted).BeginInvoke(
-                this.socket, disconnectEventArgs, null, null);
-#else
+			handler.Invoke(this.socket, disconnectEventArgs, null, null);
+#elif SILVERLIGHT
+            this.socket.Shutdown(SocketShutdown.Both);
+            disconnectEventArgs.SocketError = SocketError.Success;
+			handler.Invoke(this.socket, disconnectEventArgs, null, null);
+#else // WPF
             disconnectEventArgs.DisconnectReuseSocket = true;
             if (!this.socket.DisconnectAsync(disconnectEventArgs))
-                ((EventHandler<SocketAsyncEventArgs>)DisconnectCompleted).BeginInvoke(
-                    this.socket, disconnectEventArgs, null, null);
+                handler.BeginInvoke(this.socket, disconnectEventArgs, null, null);
 #endif
         }
 
