@@ -393,7 +393,7 @@ namespace IrcDotNet
         /// </summary>
         public event EventHandler<IrcErrorEventArgs> Error;
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         /// <summary>
         /// Occurs when the SSL certificate received from the server should be validated.
@@ -1732,7 +1732,7 @@ namespace IrcDotNet
                 handler(this, e);
         }
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         /// <summary>
         /// Raises the <see cref="ValidateSslCertificate"/> event.
