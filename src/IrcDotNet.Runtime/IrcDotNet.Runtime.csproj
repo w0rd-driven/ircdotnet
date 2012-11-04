@@ -1,0 +1,266 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7B04271B-E7A9-4D6F-9CF2-727CB4E142B6}</ProjectGuid>
+    <OutputType>winmdobj</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>IrcDotNet.Runtime</RootNamespace>
+    <AssemblyName>IrcDotNet.Runtime</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\Debug\winrt\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\bin\Debug\winrt\IrcDotNet.Runtime.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\Release\winrt\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\..\bin\Release\winrt\IrcDotNet.Runtime.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\bin\ARM\Debug\winrt\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <DocumentationFile>..\..\bin\ARM\Debug\winrt\IrcDotNet.Runtime.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
+    <OutputPath>..\..\bin\ARM\Release\winrt\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <DocumentationFile>..\..\bin\ARM\Release\winrt\IrcDotNet.Runtime.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\bin\x64\Debug\winrt\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <DocumentationFile>..\..\bin\x64\Debug\winrt\IrcDotNet.Runtime.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>..\..\bin\x64\Release\winrt\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <DocumentationFile>..\..\bin\x64\Release\winrt\IrcDotNet.Runtime.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\bin\x86\Debug\winrt\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <DocumentationFile>..\..\bin\x86\Debug\winrt\IrcDotNet.Runtime.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>..\..\bin\x86\Release\winrt\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <DocumentationFile>..\..\bin\x86\Release\winrt\IrcDotNet.Runtime.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <None Include="..\IrcDotNet\ClassDiagram.cd">
+      <Link>ClassDiagram.cd</Link>
+    </None>
+    <None Include="IrcDotNet.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\CircularBufferStream.cs">
+      <Link>CircularBufferStream.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\Collections\CollectionsUtilities.cs">
+      <Link>Collections\CollectionsUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\Collections\ReadOnlyDictionary.cs">
+      <Link>Collections\ReadOnlyDictionary.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\Collections\ReadOnlySet.cs">
+      <Link>Collections\ReadOnlySet.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\CollectionUtilities.cs">
+      <Link>CollectionUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\Ctcp\CtcpClient.cs">
+      <Link>Ctcp\CtcpClient.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\Ctcp\CtcpClientMessageProcessing.cs">
+      <Link>Ctcp\CtcpClientMessageProcessing.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\Ctcp\CtcpClientMessageSending.cs">
+      <Link>Ctcp\CtcpClientMessageSending.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\Ctcp\CtcpEventArgs.cs">
+      <Link>Ctcp\CtcpEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\DebugUtilities.cs">
+      <Link>DebugUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\DefaultIrcClient.cs">
+      <Link>DefaultIrcClient.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IIrcFloodPreventer.cs">
+      <Link>IIrcFloodPreventer.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IIrcMessageReceiveHandler.cs">
+      <Link>IIrcMessageReceiveHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IIrcMessageReceiver.cs">
+      <Link>IIrcMessageReceiver.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IIrcMessageSendHandler.cs">
+      <Link>IIrcMessageSendHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IIrcMessageSource.cs">
+      <Link>IIrcMessageSource.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IIrcMessageTarget.cs">
+      <Link>IIrcMessageTarget.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IrcChannel.cs">
+      <Link>IrcChannel.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IrcChannelCollection.cs">
+      <Link>IrcChannelCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IrcChannelInfo.cs">
+      <Link>IrcChannelInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IrcChannelUser.cs">
+      <Link>IrcChannelUser.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IrcChannelUserCollection.cs">
+      <Link>IrcChannelUserCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IrcClient.cs">
+      <Link>IrcClient.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IrcClientMessageProcessing.cs">
+      <Link>IrcClientMessageProcessing.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IrcClientMessageSending.cs">
+      <Link>IrcClientMessageSending.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IrcEventArgs.cs">
+      <Link>IrcEventArgs.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IrcLocalUser.cs">
+      <Link>IrcLocalUser.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IrcNetworkInfo.cs">
+      <Link>IrcNetworkInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IrcRegistrationInfo.cs">
+      <Link>IrcRegistrationInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IrcServer.cs">
+      <Link>IrcServer.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IrcServerInfo.cs">
+      <Link>IrcServerInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IrcServerStatisticalEntry.cs">
+      <Link>IrcServerStatisticalEntry.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IrcStandardFloodPreventer.cs">
+      <Link>IrcStandardFloodPreventer.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IrcTargetMask.cs">
+      <Link>IrcTargetMask.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IrcUser.cs">
+      <Link>IrcUser.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IrcUserCollection.cs">
+      <Link>IrcUserCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\IrcUtilities.cs">
+      <Link>IrcUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\MessageProcessorAttribute.cs">
+      <Link>MessageProcessorAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\ReflectionUtilities.cs">
+      <Link>ReflectionUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\SafeLineReader.cs">
+      <Link>SafeLineReader.cs</Link>
+    </Compile>
+    <Compile Include="..\IrcDotNet\TextUtilities.cs">
+      <Link>TextUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\VersionAssemblyInfo.cs">
+      <Link>Properties\VersionAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
+    <VisualStudioVersion>11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>IrcDotNet.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

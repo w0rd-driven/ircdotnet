@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Sockets;
 using System.Text;
+
+#if !SILVERLIGHT && !NETFX_CORE
+using System.Net.Sockets;
+#endif
 
 namespace IrcDotNet
 {
@@ -111,10 +114,10 @@ namespace IrcDotNet
                 var newWritePosition = (this.writePosition + writeCount) % this.buffer.Length;
                 if (newWritePosition > readPosition && oldWritePosition < readPosition)
                 {
-#if !SILVERLIGHT
-                    throw new InternalBufferOverflowException("The CircularBuffer was overflowed!");
-#else
+#if SILVERLIGHT || NETFX_CORE
                     throw new IOException("The CircularBuffer was overflowed!");
+#else
+                    throw new InternalBufferOverflowException("The CircularBuffer was overflowed!");
 #endif
                 }
                 System.Buffer.BlockCopy(buffer, offset, this.buffer, (int)this.writePosition, writeCount);

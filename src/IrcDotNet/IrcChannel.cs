@@ -321,7 +321,7 @@ namespace IrcDotNet
             {
                 if (this.users.Contains(channelUser))
                 {
-#if SILVERLIGHT
+#if SILVERLIGHT || NETFX_CORE
                     Debug.Assert(false, "User already in channel.");
 #else
                     Debug.Fail("User already in channel.");
@@ -368,8 +368,8 @@ namespace IrcDotNet
             {
                 if (this.users.Contains(channelUser))
                 {
-#if SILVERLIGHT
-                Debug.Assert(false, "User already in channel.");
+#if SILVERLIGHT || NETFX_CORE
+                    Debug.Assert(false, "User already in channel.");
 #else
                     Debug.Fail("User already in channel.");
 #endif

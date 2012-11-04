@@ -5,12 +5,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 using System.Net.Security;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 #endif
 
 namespace IrcDotNet
@@ -541,7 +541,7 @@ namespace IrcDotNet
             }
         }
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         private Stream GetDataStream(bool useSsl, string targetHost)
         {

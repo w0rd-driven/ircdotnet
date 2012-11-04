@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 using System.Net.Security;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 #endif
 
 namespace IrcDotNet
@@ -703,7 +703,7 @@ namespace IrcDotNet
         }
     }
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
     /// <summary>
     /// Provides data for the <see cref="IrcClient.ValidateSslCertificate"/> event.

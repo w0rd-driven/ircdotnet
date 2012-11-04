@@ -12,13 +12,13 @@ namespace IrcDotNet.Collections
     /// </summary>
     /// <typeparam name="TKey">The type of the keys in the dictionary.</typeparam>
     /// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
     [Serializable()]
 #endif
     [DebuggerDisplay("Count = {Count}")]
     public class ReadOnlyDictionary<TKey, TValue> : IDictionary<TKey, TValue>, ICollection<KeyValuePair<TKey, TValue>>,
         IEnumerable<KeyValuePair<TKey, TValue>>, IDictionary, ICollection, IEnumerable
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
         , ISerializable, IDeserializationCallback
 #endif
     {
@@ -271,7 +271,7 @@ namespace IrcDotNet.Collections
 
         #endregion
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         #region ISerializable Members
 

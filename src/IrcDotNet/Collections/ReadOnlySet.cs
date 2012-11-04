@@ -11,12 +11,12 @@ namespace IrcDotNet.Collections
     /// Represents a read-only set of values.
     /// </summary>
     /// <typeparam name="T">The type of elements in the set.</typeparam>
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
     [Serializable()]
 #endif
     [DebuggerDisplay("Count = {Count}")]
     public class ReadOnlySet<T> : ISet<T>, ICollection<T>, IEnumerable<T>, ICollection, IEnumerable
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
         , ISerializable, IDeserializationCallback
 #endif
     {
@@ -282,7 +282,7 @@ namespace IrcDotNet.Collections
 
         #endregion
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !NETFX_CORE
 
         #region ISerializable Members
 
