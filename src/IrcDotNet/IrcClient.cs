@@ -131,7 +131,7 @@ namespace IrcDotNet
         {
             this.textEncoding = Encoding.UTF8;
             this.messageProcessors = new Dictionary<string, MessageProcessor>(
-                StringComparer.InvariantCultureIgnoreCase);
+                StringComparer.OrdinalIgnoreCase);
             this.numericMessageProcessors = new Dictionary<int, MessageProcessor>(1000);
             this.floodPreventer = null;
 
@@ -894,7 +894,7 @@ namespace IrcDotNet
                     lock (((ICollection)this.channelUserModesReadOnly).SyncRoot)
                     {
                         this.channelUserModes.Clear();
-                        this.channelUserModes.AddRange(modes);
+                        this.channelUserModes.AddRange(modes.ToCharArray());
                     }
 
                     this.channelUserModesPrefixes.Clear();
@@ -935,7 +935,7 @@ namespace IrcDotNet
         /// A mode parameter is arbitrary text associated with a certain mode.</param>
         /// <returns>A 2-tuple of a single mode string and a collection of mode parameters.
         /// Each mode parameter corresponds to a single mode character, in the same order.</returns>
-        protected Tuple<string, IEnumerable<string>> GetModeAndParameters(IEnumerable<string> messageParameters)
+        protected Tuple<string, IReadOnlyList<string>> GetModeAndParameters(IEnumerable<string> messageParameters)
         {
             if (messageParameters == null)
                 throw new ArgumentNullException("messageParameters");
@@ -953,7 +953,7 @@ namespace IrcDotNet
                 else
                     modeParameters.Add(p);
             }
-            return Tuple.Create(modes.ToString(), (IEnumerable<string>)modeParameters.AsReadOnly());
+            return Tuple.Create(modes.ToString(), (IReadOnlyList<string>)modeParameters);
         }
 
         /// <summary>
@@ -1493,7 +1493,7 @@ namespace IrcDotNet
         {
             Debug.Assert(value != null);
 
-            if (value.Length == 0 || value.Any(IsInvalidMessageChar))
+            if (value.Length == 0 || value.ToCharArray().Any(IsInvalidMessageChar))
             {
                 throw new ArgumentException(string.Format(
                     Properties.Resources.MessageInvalidPrefix, value), "value");
@@ -1506,7 +1506,7 @@ namespace IrcDotNet
         {
             Debug.Assert(value != null);
 
-            if (value.Length == 0 || value.Any(IsInvalidMessageChar))
+            if (value.Length == 0 || value.ToCharArray().Any(IsInvalidMessageChar))
             {
                 throw new ArgumentException(string.Format(
                     Properties.Resources.MessageInvalidCommand, value), "value");
@@ -1519,7 +1519,7 @@ namespace IrcDotNet
         {
             Debug.Assert(value != null);
 
-            if (value.Length == 0 || value.Any(c => IsInvalidMessageChar(c) || c == ' ') || value[0] == ':')
+            if (value.Length == 0 || value.ToCharArray().Any(c => IsInvalidMessageChar(c) || c == ' ') || value[0] == ':')
             {
                 throw new ArgumentException(string.Format(
                     Properties.Resources.MessageInvalidMiddleParameter, value), "value");
@@ -1532,7 +1532,7 @@ namespace IrcDotNet
         {
             Debug.Assert(value != null);
 
-            if (value.Any(c => IsInvalidMessageChar(c)))
+            if (value.ToCharArray().Any(c => IsInvalidMessageChar(c)))
             {
                 throw new ArgumentException(string.Format(
                     Properties.Resources.MessageInvalidMiddleParameter, value), "value");

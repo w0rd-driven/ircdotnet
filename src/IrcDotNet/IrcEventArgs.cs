@@ -4,11 +4,15 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
-#if !SILVERLIGHT && !NETFX_CORE
+#if SILVERLIGHT
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
+#elif !SILVERLIGHT && !NETFX_CORE
 using System.Net.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 #endif
+
 
 namespace IrcDotNet
 {

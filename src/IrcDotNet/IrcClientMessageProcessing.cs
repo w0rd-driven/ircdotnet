@@ -342,9 +342,9 @@ namespace IrcDotNet
             Debug.Assert(message.Parameters[2] != null);
             this.ServerVersion = message.Parameters[2];
             Debug.Assert(message.Parameters[3] != null);
-            this.ServerAvailableUserModes = message.Parameters[3];
+            this.ServerAvailableUserModes = message.Parameters[3].ToCharArray();
             Debug.Assert(message.Parameters[4] != null);
-            this.ServerAvailableChannelModes = message.Parameters[4];
+            this.ServerAvailableChannelModes = message.Parameters[4].ToCharArray();
 
             // All initial information about client has now been received.
             OnClientInfoReceived(new EventArgs());
@@ -814,7 +814,7 @@ namespace IrcDotNet
                 var channelNameAndUserMode = GetUserModeAndNickName(channelId);
                 var channel = GetChannelFromName(channelNameAndUserMode.Item1);
                 if (channel.GetChannelUser(user) == null)
-                    channel.HandleUserJoined(new IrcChannelUser(user, channelNameAndUserMode.Item2));
+                    channel.HandleUserJoined(new IrcChannelUser(user, channelNameAndUserMode.Item2.ToCharArray()));
             }
         }
 
@@ -944,11 +944,11 @@ namespace IrcDotNet
             Debug.Assert(message.Parameters[6] != null);
             var userModeFlags = message.Parameters[6];
             Debug.Assert(userModeFlags.Length > 0);
-            if (userModeFlags.Contains('H'))
+            if (userModeFlags.ToCharArray().Contains('H'))
                 user.IsAway = false;
-            else if (userModeFlags.Contains('G'))
+            else if (userModeFlags.ToCharArray().Contains('G'))
                 user.IsAway = true;
-            user.IsOperator = userModeFlags.Contains('*');
+            user.IsOperator = userModeFlags.ToCharArray().Contains('*');
             if (channel != null)
             {
                 // Add user to channel if it does not already exist in it.
@@ -1003,7 +1003,7 @@ namespace IrcDotNet
                     // Find user by nick name and add it to collection of channel users.
                     var userNickNameAndMode = GetUserModeAndNickName(userId);
                     var user = GetUserFromNickName(userNickNameAndMode.Item1);
-                    channel.HandleUserNameReply(new IrcChannelUser(user, userNickNameAndMode.Item2));
+                    channel.HandleUserNameReply(new IrcChannelUser(user, userNickNameAndMode.Item2.ToCharArray()));
                 }
             }
         }
