@@ -9,8 +9,8 @@
     <ProjectGuid>{7B04271B-E7A9-4D6F-9CF2-727CB4E142B6}</ProjectGuid>
     <OutputType>winmdobj</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IrcDotNet.Runtime</RootNamespace>
-    <AssemblyName>IrcDotNet.Runtime</AssemblyName>
+    <RootNamespace>IrcDotNet</RootNamespace>
+    <AssemblyName>IrcDotNet</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -23,7 +23,7 @@
     <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\Debug\winrt\IrcDotNet.Runtime.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\Debug\winrt\IrcDotNet.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,7 +32,7 @@
     <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\Release\winrt\IrcDotNet.Runtime.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\Release\winrt\IrcDotNet.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -44,7 +44,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <DocumentationFile>..\..\bin\ARM\Debug\winrt\IrcDotNet.Runtime.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\ARM\Debug\winrt\IrcDotNet.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
     <OutputPath>..\..\bin\ARM\Release\winrt\</OutputPath>
@@ -56,7 +56,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <DocumentationFile>..\..\bin\ARM\Release\winrt\IrcDotNet.Runtime.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\ARM\Release\winrt\IrcDotNet.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -68,7 +68,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <DocumentationFile>..\..\bin\x64\Debug\winrt\IrcDotNet.Runtime.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\x64\Debug\winrt\IrcDotNet.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>..\..\bin\x64\Release\winrt\</OutputPath>
@@ -80,7 +80,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <DocumentationFile>..\..\bin\x64\Release\winrt\IrcDotNet.Runtime.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\x64\Release\winrt\IrcDotNet.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -92,7 +92,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <DocumentationFile>..\..\bin\x86\Debug\winrt\IrcDotNet.Runtime.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\x86\Debug\winrt\IrcDotNet.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>..\..\bin\x86\Release\winrt\</OutputPath>
@@ -104,14 +104,17 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <DocumentationFile>..\..\bin\x86\Release\winrt\IrcDotNet.Runtime.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\x86\Release\winrt\IrcDotNet.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <None Include="..\IrcDotNet.snk">
+      <Link>IrcDotNet.snk</Link>
+    </None>
     <None Include="..\IrcDotNet\ClassDiagram.cd">
       <Link>ClassDiagram.cd</Link>
     </None>
-    <None Include="IrcDotNet.snk" />
+    <PRIResource Include="Properties\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\GlobalAssemblyInfo.cs">
@@ -253,7 +256,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>IrcDotNet.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\IrcDotNet.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

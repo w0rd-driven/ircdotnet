@@ -163,6 +163,5 @@ namespace IrcDotNet
         {
             return string.Format("{0}/{1}", this.channel.Name, this.user.NickName);
         }
-    
     }
 }

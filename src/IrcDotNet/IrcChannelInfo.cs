@@ -37,6 +37,5 @@ namespace IrcDotNet
             this.VisibleUsersCount = visibleUsersCount;
             this.Topic = topic;
         }
-    
     }
 }
