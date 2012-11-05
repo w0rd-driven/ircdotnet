@@ -4,11 +4,19 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Net.Sockets;
 using System.Threading;
 
-#if !SILVERLIGHT && !NETFX_CORE
+#if NETFX_CORE
+using Windows.ApplicationModel.Resources;
+using Windows.Networking.Sockets;
+using Windows.System.Threading;
+#elif SILVERLIGHT
+using System.Net.Sockets;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
+#elif !SILVERLIGHT && !NETFX_CORE
 using System.Net.Security;
+using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 #endif
@@ -27,20 +35,30 @@ namespace IrcDotNet
         private Queue<Tuple<string, object>> messageSendQueue;
 
         // Network (TCP) I/O.
-        private Socket socket;
         private CircularBufferStream receiveStream;
         private Stream dataStream;
         private StreamReader dataStreamReader;
         private SafeLineReader dataStreamLineReader;
+#if NETFX_CORE
+        private StreamSocket socket;
+        private ThreadPoolTimer sendTimer;
+#else
+        private Socket socket;
         private Timer sendTimer;
+#endif
         private AutoResetEvent disconnectedEvent;
 
         public DefaultIrcClient()
             : base()
         {
+#if NETFX_CORE
+            this.socket = new StreamSocket();
+            this.sendTimer = ThreadPoolTimer.CreateTimer(new TimerElapsedHandler(WritePendingMessages), TimeSpan.MaxValue);
+#else
             this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             this.sendTimer = new Timer(new TimerCallback(WritePendingMessages), null,
                                        Timeout.Infinite, Timeout.Infinite);
+#endif
             this.disconnectedEvent = new AutoResetEvent(false);
 
             this.messageSendQueue = new Queue<Tuple<string, object>>();
@@ -50,7 +68,7 @@ namespace IrcDotNet
             get
             {
                 CheckDisposed();
-                return this.socket != null && this.socket.Connected;
+                return this.socket != null && this.socket.Control.Connected;
             }
         }
 
@@ -83,12 +101,20 @@ namespace IrcDotNet
                 }
                 if (this.sendTimer != null)
                 {
+#if NETFX_CORE
+                    this.sendTimer.Cancel();
+#else
                     this.sendTimer.Dispose();
+#endif
                     this.sendTimer = null;
                 }
                 if (this.disconnectedEvent != null)
                 {
+#if NETFX_CORE
+                    this.disconnectedEvent.Dispose();
+#else
                     this.disconnectedEvent.Close();
+#endif
                     this.disconnectedEvent = null;
                 }
             }
@@ -118,8 +144,15 @@ namespace IrcDotNet
             else if (url.Scheme == "ircs")
                 useSsl = true;
             else
-                throw new ArgumentException(string.Format(Properties.Resources.MessageInvalidUrlScheme,
-                                                          url.Scheme), "url");
+            {
+#if NETFX_CORE
+                ResourceLoader resourceLoader = new ResourceLoader();
+                var resourceString = resourceLoader.GetString("MessageInvalidUrlScheme");
+                throw new ArgumentException(string.Format(resourceString, url.Scheme), "url");
+#else
+                throw new ArgumentException(string.Format(Properties.Resources.MessageInvalidUrlScheme, url.Scheme), "url");
+#endif
+            }
 
             Connect(url.Host, url.Port == -1 ? DefaultPort : url.Port, useSsl, registrationInfo);
         }
@@ -253,7 +286,11 @@ namespace IrcDotNet
                 }
 
                 // Make timer fire when next message in send queue should be written.
+#if NETFX_CORE
+                this.sendTimer = ThreadPoolTimer.CreateTimer(new TimerElapsedHandler(WritePendingMessages), new TimeSpan(Math.Max(sendDelay, minimumSendWaitTime)));
+#else
                 this.sendTimer.Change(Math.Max(sendDelay, minimumSendWaitTime), Timeout.Infinite);
+#endif
             }
             catch (SocketException exSocket)
             {
@@ -461,7 +498,11 @@ namespace IrcDotNet
                 this.dataStreamLineReader = new SafeLineReader(this.dataStreamReader);
 
                 // Start sending and receiving data to/from server.
+#if NETFX_CORE
+                this.sendTimer = ThreadPoolTimer.CreateTimer(new TimerElapsedHandler(WritePendingMessages), TimeSpan.MaxValue);
+#else
                 this.sendTimer.Change(0, Timeout.Infinite);
+#endif
                 ReceiveAsync();
 
                 HandleClientConnected(token.Item3);
@@ -575,9 +616,13 @@ namespace IrcDotNet
 
         protected override void HandleClientConnected(IrcRegistrationInfo regInfo)
         {
+#if NETFX_CORE
+            DebugUtilities.WriteEvent(string.Format("Connected to server at '{0}'.",
+                (this.socket.Information.RemoteHostName)));
+#else
             DebugUtilities.WriteEvent(string.Format("Connected to server at '{0}'.",
                 ((IPEndPoint)this.socket.RemoteEndPoint).Address));
-
+#endif
             base.HandleClientConnected(regInfo);
         }
 
@@ -590,7 +635,11 @@ namespace IrcDotNet
             DebugUtilities.WriteEvent("Disconnected from server.");
 
             // Stop sending messages immediately.
+#if NETFX_CORE
+            this.sendTimer = ThreadPoolTimer.CreateTimer(new TimerElapsedHandler(WritePendingMessages), TimeSpan.MaxValue);
+#else
             this.sendTimer.Change(Timeout.Infinite, Timeout.Infinite);
+#endif
 
             // Set that client has disconnected.
             this.disconnectedEvent.Set();
@@ -598,11 +647,29 @@ namespace IrcDotNet
             base.HandleClientDisconnected();
         }
 
+#if NETFX_CORE
+        private void HandleSocketError(int hResult)
+        {
+            HandleSocketError(new Exception(SocketError.GetStatus(hResult).ToString()));
+        }
+        private void HandleSocketError(Exception exception)
+        {
+            switch (SocketError.GetStatus(exception.HResult))
+            {
+                case SocketErrorStatus.SoftwareCausedConnectionAbort:
+                case SocketErrorStatus.ConnectionResetByPeer:
+                    HandleClientDisconnected();
+                    return;
+                default:
+                    OnError(new IrcErrorEventArgs(exception));
+                    return;
+            }
+        }
+#else
         private void HandleSocketError(SocketError error)
         {
             HandleSocketError(new SocketException((int)error));
         }
-
         private void HandleSocketError(SocketException exception)
         {
             switch (exception.SocketErrorCode)
@@ -616,6 +683,7 @@ namespace IrcDotNet
                 return;
             }
         }
+#endif
 
         /// <summary>
         /// Returns a string representation of this instance.
@@ -624,8 +692,13 @@ namespace IrcDotNet
         public override string ToString()
         {
             if (!this.IsDisposed && this.IsConnected)
+#if NETFX_CORE
+                return string.Format("{0}@{1}", LocalUser.UserName,
+                                     this.ServerName ?? this.socket.Information.RemoteHostName.ToString());
+#else
                 return string.Format("{0}@{1}", LocalUser.UserName,
                                      this.ServerName ?? this.socket.RemoteEndPoint.ToString());
+#endif
             else
                 return "(Not connected)";
         }

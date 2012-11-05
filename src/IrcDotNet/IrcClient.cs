@@ -8,6 +8,10 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 
+#if NETFX_CORE
+using Windows.ApplicationModel.Resources;
+#endif
+
 namespace IrcDotNet
 {
     using Collections;
@@ -878,7 +882,15 @@ namespace IrcDotNet
             if (paramName == null)
                 throw new ArgumentNullException("paramName");
             if (paramName.Length == 0)
+            {
+#if NETFX_CORE
+                ResourceLoader resourceLoader = new ResourceLoader();
+                var resourceString = resourceLoader.GetString("MessageValueCannotBeEmptyString");
+                throw new ArgumentException(resourceString, "paramName");
+#else
                 throw new ArgumentException(Properties.Resources.MessageValueCannotBeEmptyString, "paramName");
+#endif
+            }
 
             // Check name of parameter.
             switch (paramName.ToLowerInvariant())
@@ -889,7 +901,15 @@ namespace IrcDotNet
                     var modes = prefixValueMatch.Groups["modes"].GetValue();
 
                     if (prefixes.Length != modes.Length)
+                    {
+#if NETFX_CORE
+                        ResourceLoader resourceLoader = new ResourceLoader();
+                        var resourceString = resourceLoader.GetString("MessageISupportPrefixInvalid");
+                        throw new ProtocolViolationException(resourceString);
+#else
                         throw new ProtocolViolationException(Properties.Resources.MessageISupportPrefixInvalid);
+#endif
+                    }
 
                     lock (((ICollection)this.channelUserModesReadOnly).SyncRoot)
                     {
@@ -917,7 +937,15 @@ namespace IrcDotNet
             if (input == null)
                 throw new ArgumentNullException("input");
             if (input.Length == 0)
+            {
+#if NETFX_CORE
+                ResourceLoader resourceLoader = new ResourceLoader();
+                var resourceString = resourceLoader.GetString("MessageValueCannotBeEmptyString");
+                throw new ArgumentException(resourceString, "input");
+#else
                 throw new ArgumentException(Properties.Resources.MessageValueCannotBeEmptyString, "input");
+#endif
+            }
 
             char mode;
             if (this.channelUserModesPrefixes.TryGetValue(input[0], out mode))
@@ -1034,8 +1062,15 @@ namespace IrcDotNet
                 case '@':
                     return IrcChannelType.Secret;
                 default:
-                    throw new ArgumentException(string.Format(
-                        Properties.Resources.MessageInvalidChannelType, type), "type");
+                    {
+#if NETFX_CORE
+                        ResourceLoader resourceLoader = new ResourceLoader();
+                        var resourceString = resourceLoader.GetString("MessageInvalidChannelType");
+                        throw new ArgumentException(string.Format(resourceString, type), "type");
+#else
+                        throw new ArgumentException(string.Format(Properties.Resources.MessageInvalidChannelType, type), "type");
+#endif
+                    }
             }
         }
 
@@ -1052,7 +1087,15 @@ namespace IrcDotNet
             if (targetName == null)
                 throw new ArgumentNullException("targetName");
             if (targetName.Length == 0)
+            {
+#if NETFX_CORE
+                ResourceLoader resourceLoader = new ResourceLoader();
+                var resourceString = resourceLoader.GetString("MessageValueCannotBeEmptyString");
+                throw new ArgumentException(resourceString, "targetName");
+#else
                 throw new ArgumentException(Properties.Resources.MessageValueCannotBeEmptyString, "targetName");
+#endif
+            }
 
             // Check whether target name represents channel, user, or target mask.
             var targetNameMatch = Regex.Match(targetName, regexMessageTarget);
@@ -1092,8 +1135,13 @@ namespace IrcDotNet
             }
             else
             {
-                throw new ArgumentException(string.Format(
-                    Properties.Resources.MessageInvalidSource, targetName), "targetName");
+#if NETFX_CORE
+                ResourceLoader resourceLoader = new ResourceLoader();
+                var resourceString = resourceLoader.GetString("MessageInvalidSource");
+                throw new ArgumentException(string.Format(resourceString, targetName), "targetName");
+#else
+                throw new ArgumentException(string.Format(Properties.Resources.MessageInvalidSource, targetName), "targetName");
+#endif
             }
         }
 
@@ -1111,7 +1159,15 @@ namespace IrcDotNet
             if (prefix == null)
                 return null;
             if (prefix.Length == 0)
+            {
+#if NETFX_CORE
+                ResourceLoader resourceLoader = new ResourceLoader();
+                var resourceString = resourceLoader.GetString("MessageValueCannotBeEmptyString");
+                throw new ArgumentException(resourceString, "prefix");
+#else
                 throw new ArgumentException(Properties.Resources.MessageValueCannotBeEmptyString, "prefix");
+#endif
+            }
 
             // Check whether prefix represents server or user.
             var prefixMatch = Regex.Match(prefix, regexMessagePrefix);
@@ -1136,8 +1192,13 @@ namespace IrcDotNet
             }
             else
             {
-                throw new ArgumentException(string.Format(
-                    Properties.Resources.MessageInvalidSource, prefix), "prefix");
+#if NETFX_CORE
+                ResourceLoader resourceLoader = new ResourceLoader();
+                var resourceString = resourceLoader.GetString("MessageInvalidSource");
+                throw new ArgumentException(string.Format(resourceString, prefix), "prefix");
+#else
+                throw new ArgumentException(string.Format(Properties.Resources.MessageInvalidSource, prefix), "prefix");
+#endif
             }
         }
 
@@ -1160,7 +1221,15 @@ namespace IrcDotNet
             if (hostName == null)
                 throw new ArgumentNullException("hostName");
             if (hostName.Length == 0)
+            {
+#if NETFX_CORE
+                ResourceLoader resourceLoader = new ResourceLoader();
+                var resourceString = resourceLoader.GetString("MessageValueCannotBeEmptyString");
+                throw new ArgumentException(resourceString, "hostName");
+#else
                 throw new ArgumentException(Properties.Resources.MessageValueCannotBeEmptyString, "hostName");
+#endif
+            }
 
             // Search for server with given name in list of known servers. If it does not exist, add it.
             var server = this.servers.SingleOrDefault(s => s.HostName == hostName);
@@ -1197,7 +1266,15 @@ namespace IrcDotNet
             if (channelName == null)
                 throw new ArgumentNullException("channelName");
             if (channelName.Length == 0)
+            {
+#if NETFX_CORE
+                ResourceLoader resourceLoader = new ResourceLoader();
+                var resourceString = resourceLoader.GetString("MessageValueCannotBeEmptyString");
+                throw new ArgumentException(resourceString, "channelName");
+#else
                 throw new ArgumentException(Properties.Resources.MessageValueCannotBeEmptyString, "channelName");
+#endif
+            }
 
             // Search for channel with given name in list of known channel. If it does not exist, add it.
             lock (((ICollection)this.channelsReadOnly).SyncRoot)
@@ -1242,7 +1319,15 @@ namespace IrcDotNet
             if (nickName == null)
                 throw new ArgumentNullException("nickName");
             if (nickName.Length == 0)
+            {
+#if NETFX_CORE
+                ResourceLoader resourceLoader = new ResourceLoader();
+                var resourceString = resourceLoader.GetString("MessageValueCannotBeEmptyString");
+                throw new ArgumentException(resourceString, "nickName");
+#else
                 throw new ArgumentException(Properties.Resources.MessageValueCannotBeEmptyString, "nickName");
+#endif
+            }
 
             // Search for user with given nick name in list of known users. If it does not exist, add it.
             var user = this.users.SingleOrDefault(u => u.NickName == nickName);
@@ -1283,7 +1368,15 @@ namespace IrcDotNet
             if (userName == null)
                 throw new ArgumentNullException("userName");
             if (userName.Length == 0)
+            {
+#if NETFX_CORE
+                ResourceLoader resourceLoader = new ResourceLoader();
+                var resourceString = resourceLoader.GetString("MessageValueCannotBeEmptyString");
+                throw new ArgumentException(resourceString, "userName");
+#else
                 throw new ArgumentException(Properties.Resources.MessageValueCannotBeEmptyString, "userName");
+#endif
+            }
 
             // Search for user with given nick name in list of known users. If it does not exist, add it.
             lock (((ICollection)this.usersReadOnly).SyncRoot)
@@ -1373,8 +1466,13 @@ namespace IrcDotNet
                 }
                 else
                 {
-                    throw new ProtocolViolationException(string.Format(
-                        Properties.Resources.MessageInvalidCommandDefinition, attribute.CommandName));
+#if NETFX_CORE
+                    ResourceLoader resourceLoader = new ResourceLoader();
+                    var resourceString = resourceLoader.GetString("MessageInvalidCommandDefinition");
+                    throw new ProtocolViolationException(string.Format(resourceString, attribute.CommandName));
+#else
+                    throw new ProtocolViolationException(string.Format(Properties.Resources.MessageInvalidCommandDefinition, attribute.CommandName));
+#endif
                 }
             };
         }
@@ -1420,9 +1518,25 @@ namespace IrcDotNet
             CheckDisposed();
 
             if (message.Command == null)
+            {
+#if NETFX_CORE
+                ResourceLoader resourceLoader = new ResourceLoader();
+                var resourceString = resourceLoader.GetString("MessageInvalidCommand");
+                throw new ArgumentException(resourceString, "message");
+#else
                 throw new ArgumentException(Properties.Resources.MessageInvalidCommand, "message");
+#endif
+            }
             if (message.Parameters.Count > maxParamsCount)
+            {
+#if NETFX_CORE
+                ResourceLoader resourceLoader = new ResourceLoader();
+                var resourceString = resourceLoader.GetString("MessageTooManyParams");
+                throw new ArgumentException(resourceString, "parameters");
+#else
                 throw new ArgumentException(Properties.Resources.MessageTooManyParams, "parameters");
+#endif
+            }
 
             var lineBuilder = new StringBuilder();
 
@@ -1495,8 +1609,13 @@ namespace IrcDotNet
 
             if (value.Length == 0 || value.ToCharArray().Any(IsInvalidMessageChar))
             {
-                throw new ArgumentException(string.Format(
-                    Properties.Resources.MessageInvalidPrefix, value), "value");
+#if NETFX_CORE
+                ResourceLoader resourceLoader = new ResourceLoader();
+                var resourceString = resourceLoader.GetString("MessageInvalidPrefix");
+                throw new ArgumentException(string.Format(resourceString, value), "value");
+#else
+                throw new ArgumentException(string.Format(Properties.Resources.MessageInvalidPrefix, value), "value");
+#endif
             }
 
             return value;
@@ -1508,8 +1627,13 @@ namespace IrcDotNet
 
             if (value.Length == 0 || value.ToCharArray().Any(IsInvalidMessageChar))
             {
-                throw new ArgumentException(string.Format(
-                    Properties.Resources.MessageInvalidCommand, value), "value");
+#if NETFX_CORE
+                ResourceLoader resourceLoader = new ResourceLoader();
+                var resourceString = resourceLoader.GetString("MessageInvalidCommand");
+                throw new ArgumentException(string.Format(resourceString, value), "value");
+#else
+                throw new ArgumentException(string.Format(Properties.Resources.MessageInvalidCommand, value), "value");
+#endif
             }
 
             return value;
@@ -1521,8 +1645,13 @@ namespace IrcDotNet
 
             if (value.Length == 0 || value.ToCharArray().Any(c => IsInvalidMessageChar(c) || c == ' ') || value[0] == ':')
             {
-                throw new ArgumentException(string.Format(
-                    Properties.Resources.MessageInvalidMiddleParameter, value), "value");
+#if NETFX_CORE
+                ResourceLoader resourceLoader = new ResourceLoader();
+                var resourceString = resourceLoader.GetString("MessageInvalidMiddleParameter");
+                throw new ArgumentException(string.Format(resourceString, value), "value");
+#else
+                throw new ArgumentException(string.Format(Properties.Resources.MessageInvalidMiddleParameter, value), "value");
+#endif
             }
 
             return value;
@@ -1534,8 +1663,13 @@ namespace IrcDotNet
 
             if (value.ToCharArray().Any(c => IsInvalidMessageChar(c)))
             {
-                throw new ArgumentException(string.Format(
-                    Properties.Resources.MessageInvalidMiddleParameter, value), "value");
+#if NETFX_CORE
+                ResourceLoader resourceLoader = new ResourceLoader();
+                var resourceString = resourceLoader.GetString("MessageInvalidTrailingParameter");
+                throw new ArgumentException(string.Format(resourceString, value), "value");
+#else
+                throw new ArgumentException(string.Format(Properties.Resources.MessageInvalidTrailingParameter, value), "value");
+#endif
             }
 
             return value;
@@ -1553,20 +1687,39 @@ namespace IrcDotNet
             {
                 if (registrationInfo.NickName == null ||
                     ((IrcUserRegistrationInfo)registrationInfo).UserName == null)
-                    throw new ArgumentException(Properties.Resources.MessageInvalidUserRegistrationInfo,
-                        registrationInfoParamName);
+                    {
+#if NETFX_CORE
+                        ResourceLoader resourceLoader = new ResourceLoader();
+                        var resourceString = resourceLoader.GetString("MessageInvalidUserRegistrationInfo");
+                        throw new ArgumentException(resourceString, registrationInfoParamName);
+#else
+                        throw new ArgumentException(Properties.Resources.MessageInvalidUserRegistrationInfo, registrationInfoParamName);
+#endif
+                    }
             }
             else if (registrationInfo is IrcServiceRegistrationInfo)
             {
                 if (registrationInfo.NickName == null ||
                     ((IrcServiceRegistrationInfo)registrationInfo).Description == null)
-                    throw new ArgumentException(Properties.Resources.MessageInvalidServiceRegistrationInfo,
-                        registrationInfoParamName);
+                    {
+#if NETFX_CORE
+                        ResourceLoader resourceLoader = new ResourceLoader();
+                        var resourceString = resourceLoader.GetString("MessageInvalidServiceRegistrationInfo");
+                        throw new ArgumentException(resourceString, registrationInfoParamName);
+#else
+                        throw new ArgumentException(Properties.Resources.MessageInvalidServiceRegistrationInfo, registrationInfoParamName);
+#endif
+                    }
             }
             else
             {
-                throw new ArgumentException(Properties.Resources.MessageInvalidRegistrationInfoObject,
-                    registrationInfoParamName);
+#if NETFX_CORE
+                ResourceLoader resourceLoader = new ResourceLoader();
+                var resourceString = resourceLoader.GetString("MessageInvalidRegistrationInfoObject");
+                throw new ArgumentException(resourceString, registrationInfoParamName);
+#else
+                throw new ArgumentException(Properties.Resources.MessageInvalidRegistrationInfoObject, registrationInfoParamName);
+#endif
             }
         }
 

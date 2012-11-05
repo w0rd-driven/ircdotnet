@@ -114,7 +114,9 @@
     <None Include="..\IrcDotNet\ClassDiagram.cd">
       <Link>ClassDiagram.cd</Link>
     </None>
-    <PRIResource Include="Properties\Resources.resw" />
+    <PRIResource Include="Properties\Resources.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\GlobalAssemblyInfo.cs">
